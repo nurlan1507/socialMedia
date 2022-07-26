@@ -21,11 +21,20 @@ const db ={};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
+//Tables
 db.users = require('./userModel')(sequelize, DataTypes);
+db.tokens = require('./tokenModel')(sequelize,DataTypes);
+db.roles = require('./roles')(sequelize,DataTypes);
+
+db.users.hasOne(db.tokens,{
+    foreignKey:"userId",
+});
+db.tokens.belongsTo(db.users);
 
 
 db.sequelize.sync({force:false}).then(()=>{
     console.log('all models are re-synced')
-})
+});
+
 
 module.exports = db;

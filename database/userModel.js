@@ -17,6 +17,9 @@ module.exports = (sequelize, DataTypes)=>{
         username:{
             type:DataTypes.STRING,
         },
+        roles:{
+            type:DataTypes.ARRAY(DataTypes.CHAR)
+        }
     });
     return user;
 }
