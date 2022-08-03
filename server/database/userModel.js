@@ -1,12 +1,17 @@
 module.exports = (sequelize, DataTypes)=>{
     const user = sequelize.define('users',{
-
         id:{
             type:DataTypes.INTEGER,
             autoIncrement:true,
             primaryKey:true,
             allowNull: false,
         },
+        // googleId:{
+        //   type:DataTypes.STRING,
+        //   primaryKey: true,
+        //   allowNull:true,
+        //   unique: true
+        // },
         email:{
             type:DataTypes.STRING,
             allowNull:false,

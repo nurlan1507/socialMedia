@@ -48,10 +48,8 @@ class authService{
         const userDto = new userDTO(user.username , user.email);
         const refreshToken =  await jwt.sign({...userDto}, process.env.REFRESHTOKENSECRET, {expiresIn: '7d'});
         const accessToken =  await jwt.sign({...userDto}, process.env.ACCESSTOKENSECRET, {expiresIn: '30m'});
-
         await db.tokens.update({refreshToken:refreshToken},{where:{userId:user.id}});
         return {user:userDto ,refreshToken: refreshToken, accessToken:accessToken};
-
     }
 
 

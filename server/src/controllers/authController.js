@@ -37,11 +37,11 @@ class authController{
         try{
             passport.authenticate('login', async(err,user,info)=>{
                 if(err){
-                    return res.status(403).json({msg:'tilox'});
+                    return res.status(403).json({msg:err});
                 }
                 if(info !== undefined){
 
-                    return res.status(403).json({msg:"tilox"});
+                    return res.status(403).json({msg:err});
                 }else{
                     req.logIn(user, async(err)=>{
                         if(err){
@@ -57,7 +57,25 @@ class authController{
         }catch (e){
             return next(e);
         }
-    }
+    };
+
+    // async googleOauth(req,res,next){
+    //     passport.authenticate('google', async(err,info,user)=>{
+    //       if(err){
+    //           return res.status(403).json({msg:err});
+    //       }
+    //       if(info!==undefined){
+    //           return res.status(403).json({msg:info.msg})
+    //       }else{
+    //           req.logIn(user, error=>{
+    //               if(error){
+    //                   return res.status(403).json({msg:error})
+    //               }
+    //               console.log(user)
+    //           })
+    //       }
+    //     })
+    // }
 }
 
 

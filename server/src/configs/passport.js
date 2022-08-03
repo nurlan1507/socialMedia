@@ -5,6 +5,11 @@ const db = require('../../database/mySqlModels');
 const LocalStrategy = require('passport-local').Strategy;
 const JWTstrategy = require('passport-jwt').Strategy;
 const ExtractJWT = require('passport-jwt').ExtractJwt;
+
+//google account autentification
+const googleStrategy = require('passport-google-oauth20');
+
+
 passport.use(
     'register',
     new LocalStrategy({
@@ -57,6 +62,21 @@ passport.use(
         }
     })
 );
+
+// passport.use(
+//     'google',
+//     new googleStrategy({
+//         clientID: process.env.GOOGLE_CLIENT_id,
+//         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+//         callbackURL: "http://www.example.com/auth/google/callback",
+//         session:false
+//     },async(accessToken, refreshToken,profile,done)=>{
+//         const user = await db.users.findOrCreate({
+//             where:{googleId : profile.id}
+//         });
+//         return done(null,user);
+//     })
+// );
 
 
 module.exports = passport;

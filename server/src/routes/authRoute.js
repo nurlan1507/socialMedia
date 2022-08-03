@@ -14,5 +14,5 @@ const checkPassword = body('password', "password is no valid").isLength({min:6, 
 
 router.post('/loginUser', authController.login);
 router.post('/registerUser' ,[ body('email', "email is not valid").isEmail(), body('password', "password is no valid").isLength({min:6, max:30})], authController.register)
-
+// router.post('/federated/googleOauth20' , authController.googleOauth);
 module.exports = router;
