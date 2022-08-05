@@ -8,8 +8,8 @@ const bcrypt = require("bcrypt");
 
 
 //validator
-const checkEmail = body('email', "email is not valid").isEmail();
-const checkPassword = body('password', "password is no valid").isLength({min:6, max:30}).exists()
+const checkEmail = body('email', "emailFalse").isEmail();
+const checkPassword = body('password', "passwordFalse").isLength({min:6, max:30}).exists()
 
 
 router.post('/loginUser', authController.login);

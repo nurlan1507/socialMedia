@@ -8,12 +8,16 @@ const db = require('../../database/mySqlModels');
 class authController{
     async register(req,res,next){
         try {
+            var validationErrors = validationResult(req);
+            if(validationErrors.length !== 0){
+                return res.status(400).json(validationErrors)
+            }
             passport.authenticate('register',async(err,user,info)=>{
                 if(err){
-                    return res.json({msg:"error during registration occured"}).status(400)
-                }
+                    return res.json("error during registration occured").status(400)
+                }   
                 if(info!== undefined){
-                    res.status(403).json({msg:info.msg})
+                    res.status(400).json({msg:[info.msg]})
                 }else{
                     req.logIn(user,async(error)=>{
                         const {username,email} = req.body;
@@ -40,7 +44,6 @@ class authController{
                     return res.status(403).json({msg:err});
                 }
                 if(info !== undefined){
-
                     return res.status(403).json({msg:err});
                 }else{
                     req.logIn(user, async(err)=>{

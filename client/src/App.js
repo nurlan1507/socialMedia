@@ -4,8 +4,7 @@ import React from 'react';
 import {
   BrowserRouter as Router,
   Routes,
-  Route,
-  Link
+  Route
 } from 'react-router-dom';
 
 
@@ -14,7 +13,7 @@ import {SignUp} from "./pages/register/sign_up";
 
 function App() {
 
-
+    console.log(process.env.NODE_ENV);
   return (
     <Router>
       <Routes>

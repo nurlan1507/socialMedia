@@ -26,7 +26,7 @@ passport.use(
                     email:email
                 },raw:1})
             if(checkUser){
-                return done(null,false,{msg:"user already exists"});
+                return done(null,false,['user already exists']);
             }
             const hashPassword = await bcrypt.hash(password,10);
             const newUser = await db.users.create({email:email,hashedPassword:hashPassword});

@@ -15,7 +15,8 @@ const authRoute= require('./src/routes/authRoute');
 //middlewares
 
 app.use(cors({
-
+    credentials: true,
+    origin: process.env.CLIENT_URL,
 }))
 app.use(express.json());
 app.use(passport.initialize());
