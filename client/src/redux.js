@@ -1,8 +1,7 @@
 import {configureStore, getDefaultMiddleware} from '@reduxjs/toolkit';
 import userSliceReducer from './features/userAuth/userSlice';
 import {applyMiddleware, compose} from 'redux'
-import {logger} from './features/middlewares/redux_middlewares'
-
+import thunk from 'redux-thunk'
 
 
 const middleware = getDefaultMiddleware({
@@ -18,5 +17,5 @@ export default configureStore({
     reducer: {
         user: userSliceReducer,
     },
-    middleware
+    middleware: [...middleware, thunk]
 })

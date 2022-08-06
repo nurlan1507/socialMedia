@@ -6,6 +6,12 @@ module.exports = (sequelize, DataTypes)=>{
             primaryKey:true,
             allowNull: false,
         },
+        firstName:{
+            type:DataTypes.STRING
+        },
+        secondName: {
+            type:DataTypes.STRING
+        },
         // googleId:{
         //   type:DataTypes.STRING,
         //   primaryKey: true,
@@ -23,12 +29,7 @@ module.exports = (sequelize, DataTypes)=>{
         hashedPassword:{
             type:DataTypes.STRING(64),
         },
-        username:{
-            type:DataTypes.STRING,
-            set(value){
-                this.setDataValue('username', value)
-            }
-        },
+
     });
     return user;
 }

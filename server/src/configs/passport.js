@@ -8,6 +8,7 @@ const ExtractJWT = require('passport-jwt').ExtractJwt;
 
 //google account autentification
 const googleStrategy = require('passport-google-oauth20');
+const {logger} = require("sequelize/lib/utils/logger");
 
 
 passport.use(
@@ -20,7 +21,11 @@ passport.use(
     }, async(req,email,password,done)=>{
         try{
             const email = req.body.email;
-            const password = req.body.password
+            const password = req.body.password;
+            const repeat_password = req.body.repeat_password;
+            console.log(email,password,repeat_password)
+            if(password !== repeat_password)
+                return done(null,false, ['password do not match']);
             const checkUser = await db.users.findOne({
                 where:{
                     email:email
@@ -32,6 +37,7 @@ passport.use(
             const newUser = await db.users.create({email:email,hashedPassword:hashPassword});
             return done(null,newUser);
         }catch (e) {
+            console.log(e)
             return e
         }
     })

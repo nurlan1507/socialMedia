@@ -8,22 +8,25 @@ const db = require('../../database/mySqlModels');
 class authController{
     async register(req,res,next){
         try {
-            var validationErrors = validationResult(req);
-            if(validationErrors.length !== 0){
-                return res.status(400).json(validationErrors)
+            var errors = validationResult(req);
+            console.log(errors.isEmpty())
+            if(!errors.isEmpty()){
+                return res.status(400).json(errors)
             }
             passport.authenticate('register',async(err,user,info)=>{
                 if(err){
-                    return res.json("error during registration occured").status(400)
+                    return res.status(400).json("error during registration occured")
                 }   
                 if(info!== undefined){
-                    res.status(400).json({msg:[info.msg]})
+                    res.status(400).json([{msg:info}])
                 }else{
                     req.logIn(user,async(error)=>{
-                        const {username,email} = req.body;
-                        console.log(username)
+                        const {firstName, secondName,email, password,repeat_password} = req.body;
+                        console.log('lox')
+
                         await user.update({
-                            username:username,
+                            firstName:firstName,
+                            secondName:secondName,
                             email:email
                         })
                         const tokens = await authService.createTokens(user);

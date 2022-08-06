@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {useFormik} from "formik"
+
 
 
 
@@ -9,11 +9,13 @@ const useInput = (initValue,validations)=>{
     const [value,setValue] = useState(initValue)
     const [isDirty, setDirty] = useState(false)
     const [passwordsAreEqual, setPasswordsAreEqual] = useState(false)
+    const [errors , setErrors] = useState([]);
     // const [isEmpty, setEmpty] = useState(false)
     const valid = useValidation(value,validations)
 
     const onChange=(e)=>{
         setValue(e.target.value)
+        alert(value)
         console.log(value)
     }
     const onBlur=(e)=>{
@@ -38,13 +40,15 @@ const useValidation = (value,validations)=>{
     const [minLengthError, setMinLengthError] = useState(false)
     const [maxLengthError, setMaxLengthError]= useState(false)
     const [emailError, setEmailError] = useState(false)
-    const [isValidGEN, setValidGEN] = useState(false)
+    const [errors , setErrors] = useState([]);
+
+
     useEffect( ()=>{
         console.log("ЗАПУСТИЛ ХУК")
         for(const validation in validations) {
             switch (validation) {
                 case 'minLength' :
-                    value.length < validations[validation] ? setMinLengthError(true) : setMinLengthError(false)
+                    value.length < validations[validation] ? (setMinLengthError(true)): setMinLengthError(false)
                     break
                 case 'isEmpty':
                     value ? setEmpty(false) : setEmpty(true)
@@ -58,20 +62,11 @@ const useValidation = (value,validations)=>{
             }
         }
     },[value])
-    useEffect(()=> {
-        if (isEmpty || minLengthError || emailError) {
-            setValidGEN(false)
-        } else {
-            setValidGEN(true)
-        }
-    },[emailError,isEmpty,minLengthError])
-
     return {
         isEmpty,
         maxLengthError,
         minLengthError,
         emailError,
-        isValidGEN
     }
 }
 

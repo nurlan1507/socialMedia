@@ -17,7 +17,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route exact path='/signUp' element = { < SignUp /> }/>
+            <Route exact path='/signUp' element = { < SignUp /> }/>
       </Routes>
 
 
