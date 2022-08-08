@@ -31,7 +31,7 @@ db.users.hasOne(db.tokens,{
 });
 db.tokens.belongsTo(db.users);
 
-db.sequelize.sync({force:true}).then(()=>{
+db.sequelize.sync({force:false}).then(()=>{
     console.log('all models are re-synced')
 });
 

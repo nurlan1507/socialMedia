@@ -47,7 +47,7 @@ class authController{
                     return res.status(403).json({msg:err});
                 }
                 if(info !== undefined){
-                    return res.status(403).json({msg:err});
+                    return res.status(403).json(info);
                 }else{
                     req.logIn(user, async(err)=>{
                         if(err){
