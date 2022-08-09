@@ -24,6 +24,11 @@ class authService{
         const userDto = new userDTO(user.username, user.email);
         const refreshToken = await jwt.sign({...userDto}, process.env.REFRESHTOKENSECRET, {expiresIn:'7d'});
         const accessToken = await jwt.sign({...userDto}, process.env.ACCESSTOKENSECRET,{expiresIn: '30m'});
+        const newDbToken = await db.tokens.findOne({where:{userId:user.id}});
+        if(!newDbToken){
+            var newToken = await db.tokens.create({refreshToken:refreshToken, userId:user.id});
+            return {refreshToken: refreshToken, accessToken:accessToken};
+        }
         const newDBToken = await db.tokens.update({refreshToken:refreshToken}, {where:{
             userId:user.id
             }}

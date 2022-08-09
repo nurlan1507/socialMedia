@@ -75,8 +75,11 @@ export const SignUp=()=>{
                         onSignUpClicked()
                     }}>register</button>
                 </form>
-            <div className={styles.footer}>
             </div>
+            <div className={styles.ocean}>
+                <div className={styles.wave}/>
+                <div className={styles.wave}/>
+                <div className={styles.wave}/>
             </div>
     </div>
     )

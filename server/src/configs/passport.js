@@ -7,8 +7,7 @@ const JWTstrategy = require('passport-jwt').Strategy;
 const ExtractJWT = require('passport-jwt').ExtractJwt;
 
 //google account autentification
-const googleStrategy = require('passport-google-oauth20');
-const {logger} = require("sequelize/lib/utils/logger");
+const googleStrategy = require('passport-google-oidc');
 
 
 passport.use(
@@ -55,7 +54,7 @@ passport.use(
         try{
             const userInDb = await db.users.findOne({where:{email:email}});
             if(!userInDb){
-                return done(null,false,{msg:"incorrect email or password"});
+                return done(null,false,{msg:"incorrect email"});
             }
             const passMatch =await bcrypt.compare(password, userInDb.hashedPassword);
             if(!passMatch){
@@ -69,20 +68,36 @@ passport.use(
     })
 );
 
-// passport.use(
-//     'google',
-//     new googleStrategy({
-//         clientID: process.env.GOOGLE_CLIENT_id,
-//         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-//         callbackURL: "http://www.example.com/auth/google/callback",
-//         session:false
-//     },async(accessToken, refreshToken,profile,done)=>{
-//         const user = await db.users.findOrCreate({
-//             where:{googleId : profile.id}
-//         });
-//         return done(null,user);
-//     })
-// );
+passport.use(
+    'google',
+    new googleStrategy({
+        clientID: process.env.GOOGLE_CLIENT_id,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        callbackURL: "https://www.example.com/oauth2/redirect/google",
+        session:false
+    },async function(issuer,profile,cb){
+        try{
+            const ExUser = await db.users.findOne({where:{profileId: profile.id}});
+            if(!ExUser){
+                const fullName = profile.displayName.split(' ');
+                const newUser = await db.users.create({
+                    firstName:fullName[0],
+                    secondName:fullName[1],
+                    provider:issuer,
+                    email: profile.id,
+                    googleId: profile.id,
+                });//creating user if ExUser does not exist
+                console.log(newUser)
+                return cb(null,newUser);
+            }else{  //else we already got a user, so we login
+                const userInDb = await db.users.findOne({where:{googleId:profile.id}});
+                return cb(null,userInDb);
+            }
+        }catch (e) {
+            return cb(null,false,{msg:e});
+        }
+    })
+);
 
 
 module.exports = passport;

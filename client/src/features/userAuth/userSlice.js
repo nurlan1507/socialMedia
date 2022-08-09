@@ -47,9 +47,20 @@ export const fetchSignUp  = createAsyncThunk('user/register', async(data,thunkAp
 export const fetchSignIn = createAsyncThunk('user/login' , async(data,thunkApi)=>{
     try{
         const user = await axios.post('/api/loginUser' , data);
+        console.log(user)
         return user;
     }catch (e) {
         //TODO:a page with error like NotFound
+        return e.response;
+    }
+});
+
+
+export const fetchGoogleAuth = createAsyncThunk('user/googleAuth',async(data)=>{
+    try{
+        const user = await axios.post('/api/auth/google');
+        return user;
+    }catch (e) {
         return e.response;
     }
 })

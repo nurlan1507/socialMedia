@@ -44,10 +44,10 @@ class authController{
         try{
             passport.authenticate('login', async(err,user,info)=>{
                 if(err){
-                    return res.status(403).json({msg:err});
+                    return res.status(400).json(err);
                 }
                 if(info !== undefined){
-                    return res.status(403).json(info);
+                    return res.status(400).json(info);
                 }else{
                     req.logIn(user, async(err)=>{
                         if(err){
@@ -65,23 +65,27 @@ class authController{
         }
     };
 
-    // async googleOauth(req,res,next){
-    //     passport.authenticate('google', async(err,info,user)=>{
-    //       if(err){
-    //           return res.status(403).json({msg:err});
-    //       }
-    //       if(info!==undefined){
-    //           return res.status(403).json({msg:info.msg})
-    //       }else{
-    //           req.logIn(user, error=>{
-    //               if(error){
-    //                   return res.status(403).json({msg:error})
-    //               }
-    //               console.log(user)
-    //           })
-    //       }
-    //     })
-    // }
+    async googleOauth(req,res,next){
+        passport.authenticate('google', async(err,info,user)=>{
+          if(err){
+              return res.status(400).json({msg:err});
+          }
+          if(info!==undefined){
+              return res.status(400).json({msg:info.msg})
+          }else{
+              req.logIn(user, error=>{
+                  if(error){
+                      return res.status(400).json({msg:error})
+                  }
+                  const newTokens = authService.refreshTokens(user);
+                  res.cookie('accessToken', newTokens.accessToken, {httpOnly:true, maxAge: 30*60*1000});
+                  res.cookie('refreshToken', newTokens.refreshToken, {httpOnly:true, maxAge: 30*24*60*60*1000});
+                  console.log(user)
+                  return res.status(200).json({user:{user}, tokens:{...newTokens}});
+              })
+          }
+        })
+    }
 }
 
 
