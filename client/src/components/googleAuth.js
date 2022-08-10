@@ -11,6 +11,7 @@ export default function GoogleAuth (){
             console.log('adsdsa')
             return false
         }else{
+
             console.log(response)
             return response
         }

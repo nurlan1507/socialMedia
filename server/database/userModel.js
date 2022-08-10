@@ -30,6 +30,10 @@ module.exports = (sequelize, DataTypes)=>{
                 this.setDataValue('email', value)
             }
         },
+        avatar:{
+            type:DataTypes.STRING,
+            defaultValue:  'https://res.cloudinary.com/dsnvwwozm/image/upload/v1657545948/zcejlqfembcowdritngr.jpg'
+        },
         hashedPassword:{
             type:DataTypes.STRING(64),
         },

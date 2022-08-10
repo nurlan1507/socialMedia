@@ -58,7 +58,9 @@ export const fetchSignIn = createAsyncThunk('user/login' , async(data,thunkApi)=
 
 export const fetchGoogleAuth = createAsyncThunk('user/googleAuth',async(data)=>{
     try{
-        const user = await axios.post('/api/auth/google');
+        console.log("retch google auth")
+        const user = await axios.post('/api/api/v1/auth/google',data);
+        console.log(user)
         return user;
     }catch (e) {
         return e.response;

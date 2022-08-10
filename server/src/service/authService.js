@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken');
 class authService{
 
     async createTokens(user){
-        const userdto = new userDTO(user.username,user.email);
+        const userdto = new userDTO(user.id, user.firstName, user.secondName, user.email, user.avatar);
         const refreshToken = await jwt.sign({...userdto}, process.env.REFRESHTOKENSECRET, {expiresIn:'7d'});
         const accessToken = await jwt.sign({...userdto}, process.env.ACCESSTOKENSECRET,{expiresIn: '30m'});
         const DBToken = await db.tokens.create({

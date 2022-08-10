@@ -1,9 +1,15 @@
 class userDto{
-    username;
+    firstName;
+    secondName;
     email;
-    constructor(username,email) {
-        this.username=username;
+    id;
+    avatar;
+    constructor(id,firstName, secondName,email, avatar) {
+        this.id = id
+        this.firstName = firstName;
+        this.secondName = secondName;
         this.email = email;
+        this.avatar = avatar
     }
 }
 

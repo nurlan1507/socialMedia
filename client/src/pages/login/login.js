@@ -42,15 +42,19 @@ export const Login = () => {
         }
         navigate('/main')
     };
-    const handleGoogleLogin =(response)=>{
+    const handleGoogleLogin =async(response)=>{
         console.log(response)
         if(response.error!==undefined){
             console.log(`${response.error}`);
-            console.log('adsdsa')
             return false
         }else{
-            console.log(response)
-            return response
+            const result = await dispatch(fetchGoogleAuth(response))
+            console.log(result.payload.status)
+            if(result.payload.status !==200){
+                setError('error in google auth occured');
+                return
+            }
+            navigate('/main')
         }
     }
 

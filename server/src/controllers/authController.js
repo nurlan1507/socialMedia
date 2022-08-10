@@ -4,6 +4,11 @@ const authService = require('../service/authService');
 const passport = require('../configs/passport');
 const db = require('../../database/mySqlModels');
 
+const userDto = require('../dtos/userDtos');
+const {OAuth2Client} = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+
 
 class authController{
     async register(req,res,next){
@@ -64,6 +69,42 @@ class authController{
             return next(e);
         }
     };
+
+
+
+
+    async auth2(req,res,next){
+        const {tokenId} = req.body;
+        const ticket = await client.verifyIdToken({
+            idToken:tokenId,
+            audience:process.env.GOOGLE_CLIENT_ID
+        });
+        const {email, picture, given_name, family_name,sub } = ticket.getPayload();
+        const exUser = await db.users.findOne({where:{email:email}});
+        if(exUser){
+            //then we login
+            const newTokens =await authService.refreshTokens(exUser);
+            res.cookie('accessToken', newTokens.accessToken, {httpOnly:true, maxAge: 30*60*1000});
+            res.cookie('refreshToken', newTokens.refreshToken, {httpOnly:true, maxAge: 30*24*60*60*1000});
+            return res.status(200).json({user:{...exUser}, tokens:{...newTokens}});
+        }else {
+            const newUser = await db.users.create({
+                firstName: given_name,
+                secondName: family_name,
+                email: email,
+                avatar: picture,
+                googleId: sub
+            })
+            const newTokens = await authService.refreshTokens(newUser);
+            res.cookie('accessToken', newTokens.accessToken, {httpOnly:true, maxAge: 30*60*1000});
+            res.cookie('refreshToken', newTokens.refreshToken, {httpOnly:true, maxAge: 30*24*60*60*1000});
+            return res.status(200).json({user:{newUser}, tokens:{...newTokens}});
+        }
+    }
+
+
+
+
 
     async googleOauth(req,res,next){
         passport.authenticate('google', async(err,info,user)=>{
