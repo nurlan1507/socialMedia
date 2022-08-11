@@ -36,7 +36,7 @@ class authController{
                         const tokens = await authService.createTokens(user);
                         res.cookie('accessToken', tokens.accessToken, {httpOnly:true, maxAge: 30*60*1000});
                         res.cookie('refreshToken', tokens.refreshToken, {httpOnly:true, maxAge: 30*24*60*60*1000});
-                        return res.json({user: user , tokens:{...tokens}}).status(200);
+                        return res.json({user:{...user.dataValues} , tokens:{...tokens}}).status(200);
                     })
                 }
             })(req,res,next);
@@ -60,7 +60,7 @@ class authController{
                         const newTokens = await authService.refreshTokens(user);
                         res.cookie('accessToken', newTokens.accessToken, {httpOnly:true, maxAge: 30*60*1000});
                         res.cookie('refreshToken', newTokens.refreshToken, {httpOnly:true, maxAge: 30*24*60*60*1000});
-                        return res.status(200).json({user:{user}, tokens:{...newTokens}});
+                        return res.status(200).json({user:{...user.dataValues}, tokens:{...newTokens}});
                     })
                 }
             })(req,res,next)

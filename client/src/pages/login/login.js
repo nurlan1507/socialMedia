@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch , useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import styles from './login.module.css';
-import {fetchGoogleAuth, fetchSignIn} from "../../features/userAuth/userSlice";
+import {fetchGoogleAuth, fetchSignIn,userLogined} from "../../features/userAuth/userSlice";
 
 import {gapi} from "gapi-script";
 import {GoogleLogin} from 'react-google-login';
@@ -35,13 +35,20 @@ export const Login = () => {
         setSignInRequestStatus('pending');
         const result = await dispatch(fetchSignIn({email:email, password:password}));
         console.log(result.payload.data)
-        if(result.status!==200){
-            console.log(result.payload.data)
+        if(result.payload.status!==200){
+            console.log(result.payload)
             setError(result.payload.data.msg)
             return
         }
+        const user = result.payload.data.user;
+        console.log(user)
+        localStorage.setItem('accessToken', result.payload.data.tokens.accessToken);
+        dispatch(userLogined({id:user.id,email:user.email, avatar:user.avatar, firstName:user.firstName, secondName: user.secondName}))
         navigate('/main')
     };
+
+
+
     const handleGoogleLogin =async(response)=>{
         console.log(response)
         if(response.error!==undefined){
@@ -54,20 +61,15 @@ export const Login = () => {
                 setError('error in google auth occured');
                 return
             }
+            const user = result.payload.data.user;
+            console.log(user)
+            localStorage.setItem('accessToken', result.payload.data.tokens.accessToken);
+            dispatch(userLogined({id:user.id,email:user.email, avatar:user.avatar, firstName:user.firstName, secondName: user.secondName}))
             navigate('/main')
         }
     }
 
-    const onGoogleAuthClicked = async()=>{
-        setSignInRequestStatus('pending');
-        console.log('asdasdasdasdasdasdd')
-        const result = await dispatch(fetchGoogleAuth);
-        if(result.status!==200){
-            console.log(result)
-            return
-        }
-        navigate('/main')
-    }
+    
 
     return(
         <div>

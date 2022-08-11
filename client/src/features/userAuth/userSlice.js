@@ -1,15 +1,25 @@
 import {createAsyncThunk,getDefaultMiddleware, createSlice} from '@reduxjs/toolkit';
 import axios from '../../api/api-handler';
-const initialState = {email:null, password:null};
+import {decodeToken} from "../../api/authHandler";
+
+const initialState = decodeToken();
 const userSlice = createSlice({
     name:"user",
     initialState,
     reducers:{
-        signedUp: (state,action)=>{
-            state.user.email = action.payload.email;
-            state.user.password = action.payload.password
+        userLogined(state,action){
+            console.log(state)
+            console.log(action.payload)
+            state =action.payload;
         },
+        userRegistered(state,action){
+            console.log(action.payload)
+            state = action.payload;
+            console.log(state)
+        }
     },
+
+
     extraReducers(builder) {
         builder.addCase(fetchSignUp.fulfilled, (state, action) => {
             state.status = 'succeeded';
@@ -29,8 +39,10 @@ const customizedMiddleware = getDefaultMiddleware({
     serializableCheck: false
 })
 
-export const {signedUp} = userSlice.actions;
-export const getUserInfo = (state)=> state;
+export const getUserData=state=>{
+    return state.user
+}
+
 
 //async thunks
 export const fetchSignUp  = createAsyncThunk('user/register', async(data,thunkApi)=>{
@@ -67,5 +79,8 @@ export const fetchGoogleAuth = createAsyncThunk('user/googleAuth',async(data)=>{
         return e.response;
     }
 })
+
+export const {userLogined, userRegistered} = userSlice.actions;
+
 
 export default userSlice.reducer;

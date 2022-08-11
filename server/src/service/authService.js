@@ -82,8 +82,6 @@ class authService{
         await db.tokens.update({refreshToken:refreshToken},{where:{userId:user.id}});
         return {user:userDto ,refreshToken: refreshToken, accessToken:accessToken};
     }
-
-
 }
 
 module.exports = new authService();

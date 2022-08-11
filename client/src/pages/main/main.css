@@ -1,0 +1,10 @@
+.mainCont{
+    display: grid;
+    grid-template-columns: 3fr 9fr;
+}
+.sideBar{
+    width: 100%;
+}
+.mainContent{
+    width:100%
+}

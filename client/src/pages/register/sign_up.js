@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import styles from  './sign_up.modules.css';
-import {signedUp, fetchSignUp} from "../../features/userAuth/userSlice";
+import { fetchSignUp, userRegistered} from "../../features/userAuth/userSlice";
 const footer= require('../../assets/footer.png');
 
 
@@ -36,8 +36,11 @@ export const SignUp=()=>{
                     setErrors(result.data)
                 }
             }
+            console.log(result.data)
             if(result.status ===200) {
                 localStorage.setItem("accessToken" , result.data.tokens.accessToken)
+                const user = result.data.user;
+                dispatch(userRegistered({id:user.id,email:user.email, avatar:user.avatar, firstName:user.firstName, secondName: user.secondName}));
                 navigate('/main')
 
             }

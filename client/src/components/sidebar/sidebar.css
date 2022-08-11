@@ -1,0 +1,59 @@
+*{
+    padding: 0;
+    margin: 0;
+    font-size: 14px;
+}
+
+.sidebar{
+    height: 100%;
+    position: relative;
+    background-color: #E5E5E5;
+    padding:50px 20px
+}
+.sidebarContent{
+    display: flex;
+    flex-direction: column;
+    width:100%;
+    height: fit-content;
+}
+.mainUserInfo{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: fit-content;
+}
+.avatarContainer{
+    width: 200px;
+    height:200px;
+    display: flex;
+    justify-content: center;
+}
+.avatar{
+    width:45%;
+    height: 45%;
+    border-radius: 100%;
+}
+.nameContainer{
+    width:100%;
+}
+.username{
+    text-align: center;
+    font-size: 25px;
+}
+.email{
+    text-align: center;
+}
+.tabsContainer{
+
+}
+.tabs{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.tabsItem{
+    width: 100%;
+    line-height: 20px;
+
+}
