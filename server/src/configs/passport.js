@@ -5,7 +5,8 @@ const db = require('../../database/mySqlModels');
 const LocalStrategy = require('passport-local').Strategy;
 const JWTstrategy = require('passport-jwt').Strategy;
 const ExtractJWT = require('passport-jwt').ExtractJwt;
-
+const {OAuth2Client} = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 //google account autentification
 const googleStrategy = require('passport-google-oidc');
 
@@ -67,6 +68,50 @@ passport.use(
         }
     })
 );
+
+
+
+
+passport.use(
+    "googleAuth",
+    new LocalStrategy({
+        passReqToCallback: true,
+        session: false,
+    }, async(req,done)=>{
+        try{
+            const {tokenId} = req.body;
+            console.log(tokenId)
+            const ticket = await client.verifyIdToken({
+                idToken:tokenId,
+                audience:process.env.GOOGLE_CLIENT_ID
+            });
+            const {email, picture, given_name, family_name,sub } = ticket.getPayload();
+            const exUser = await db.users.findOne({where:{email:email}});
+            if(exUser){
+                //if user exists we just login
+                return done(null,exUser);
+            }else{
+                //if user wasnt found in db we create new One
+                const newUser = await db.users.create({
+                    firstName: given_name,
+                    secondName: family_name,
+                    email: email,
+                    avatar: picture,
+                    googleId: sub
+                });
+                console.log(newUser.toJSON())
+                return done(null,newUser.toJSON())
+            }
+        }
+        catch (e){
+            return done(null,{msg:e})
+        }
+
+
+
+    })
+)
+
 
 passport.use(
     'google',

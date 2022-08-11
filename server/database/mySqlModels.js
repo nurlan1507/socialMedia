@@ -28,6 +28,7 @@ db.roles = require('./roles')(sequelize,DataTypes);
 
 db.users.hasOne(db.tokens,{
     foreignKey:"userId",
+    sourceKey:"id",
 });
 db.tokens.belongsTo(db.users);
 

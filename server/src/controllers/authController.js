@@ -28,11 +28,10 @@ class authController{
                     req.logIn(user,async(error)=>{
                         const {firstName, secondName,email, password,repeat_password} = req.body;
                         console.log('lox')
-
                         await user.update({
                             firstName:firstName,
                             secondName:secondName,
-                            email:email
+                            email:email,
                         })
                         const tokens = await authService.createTokens(user);
                         res.cookie('accessToken', tokens.accessToken, {httpOnly:true, maxAge: 30*60*1000});
@@ -74,31 +73,31 @@ class authController{
 
 
     async auth2(req,res,next){
-        const {tokenId} = req.body;
-        const ticket = await client.verifyIdToken({
-            idToken:tokenId,
-            audience:process.env.GOOGLE_CLIENT_ID
-        });
-        const {email, picture, given_name, family_name,sub } = ticket.getPayload();
-        const exUser = await db.users.findOne({where:{email:email}});
-        if(exUser){
-            //then we login
-            const newTokens =await authService.refreshTokens(exUser);
-            res.cookie('accessToken', newTokens.accessToken, {httpOnly:true, maxAge: 30*60*1000});
-            res.cookie('refreshToken', newTokens.refreshToken, {httpOnly:true, maxAge: 30*24*60*60*1000});
-            return res.status(200).json({user:{...exUser}, tokens:{...newTokens}});
-        }else {
-            const newUser = await db.users.create({
-                firstName: given_name,
-                secondName: family_name,
-                email: email,
-                avatar: picture,
-                googleId: sub
-            })
-            const newTokens = await authService.refreshTokens(newUser);
-            res.cookie('accessToken', newTokens.accessToken, {httpOnly:true, maxAge: 30*60*1000});
-            res.cookie('refreshToken', newTokens.refreshToken, {httpOnly:true, maxAge: 30*24*60*60*1000});
-            return res.status(200).json({user:{newUser}, tokens:{...newTokens}});
+        try{
+            const {tokenId} = req.body;
+            const credentials =await authService.getGoogleUserCredentials(tokenId);
+            const exUser = await db.users.findOne({where:{email:credentials.email}} );
+            if(exUser){
+                console.log(exUser.dataValues)
+                const newTokens =await authService.refreshTokens(exUser.dataValues);
+                res.cookie('accessToken', newTokens.accessToken, {httpOnly:true, maxAge: 30*60*1000});
+                res.cookie('refreshToken', newTokens.refreshToken, {httpOnly:true, maxAge: 30*24*60*60*1000});
+                return res.status(200).json({user:{...exUser}, tokens:{...newTokens}});
+            }else {
+                const newUser = await db.users.create({
+                    firstName: credentials.given_name,
+                    secondName: credentials.family_name,
+                    email: credentials.email,
+                    avatar: credentials.picture,
+                });
+                console.log(newUser);
+                const newTokens = await authService.refreshTokens(newUser);
+                res.cookie('accessToken', newTokens.accessToken, {httpOnly:true, maxAge: 30*60*1000});
+                res.cookie('refreshToken', newTokens.refreshToken, {httpOnly:true, maxAge: 30*24*60*60*1000});
+                return res.status(200).json({user:{newUser}, tokens:{...newTokens}});
+            }
+        }catch (e) {
+            return next(e)
         }
     }
 
@@ -107,25 +106,29 @@ class authController{
 
 
     async googleOauth(req,res,next){
-        passport.authenticate('google', async(err,info,user)=>{
-          if(err){
-              return res.status(400).json({msg:err});
-          }
-          if(info!==undefined){
-              return res.status(400).json({msg:info.msg})
-          }else{
-              req.logIn(user, error=>{
-                  if(error){
-                      return res.status(400).json({msg:error})
-                  }
-                  const newTokens = authService.refreshTokens(user);
-                  res.cookie('accessToken', newTokens.accessToken, {httpOnly:true, maxAge: 30*60*1000});
-                  res.cookie('refreshToken', newTokens.refreshToken, {httpOnly:true, maxAge: 30*24*60*60*1000});
-                  console.log(user)
-                  return res.status(200).json({user:{user}, tokens:{...newTokens}});
-              })
-          }
-        })
+        try{
+            passport.authenticate('google', async(err,info,user)=>{
+                if(err){
+                    return res.status(400).json({msg:err});
+                }
+                if(info!==undefined){
+                    return res.status(400).json({msg:info.msg})
+                }else{
+                    req.logIn(user, error=>{
+                        if(error){
+                            return res.status(400).json({msg:error})
+                        }
+                        const newTokens = authService.refreshTokens(user);
+                        res.cookie('accessToken', newTokens.accessToken, {httpOnly:true, maxAge: 30*60*1000});
+                        res.cookie('refreshToken', newTokens.refreshToken, {httpOnly:true, maxAge: 30*24*60*60*1000});
+                        console.log(user)
+                        return res.status(200).json({user:{user}, tokens:{...newTokens}});
+                    })
+                }
+            })(req,res,next)
+        }catch (e) {
+            return next(e)
+        }
     }
 }
 

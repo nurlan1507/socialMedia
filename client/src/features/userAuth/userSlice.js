@@ -63,6 +63,7 @@ export const fetchGoogleAuth = createAsyncThunk('user/googleAuth',async(data)=>{
         console.log(user)
         return user;
     }catch (e) {
+        console.log(e.response)
         return e.response;
     }
 })

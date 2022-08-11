@@ -10,6 +10,15 @@ class userDto{
         this.secondName = secondName;
         this.email = email;
         this.avatar = avatar
+    };
+
+    toString(){
+        return {
+           firstname:this.firstName,
+            secondName:this.secondName,
+            id:this.id,
+            avatar:this.avatar
+        }
     }
 }
 

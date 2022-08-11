@@ -12,12 +12,6 @@ module.exports = (sequelize, DataTypes)=>{
         secondName: {
             type:DataTypes.STRING
         },
-        googleId:{
-            type:DataTypes.STRING,
-            primaryKey: true,
-            allowNull:true,
-            unique: true
-        },
         provider:{
             type:DataTypes.STRING,
             allowNull:true
