@@ -31,6 +31,7 @@ module.exports={
             },
             {
                 test: /\.css$/,
+                include:/\.module\.css$/ ,
                 exclude: /node_modules/,
                 use: [
                     isProd?MiniCssExtractPlugin.loader : 'style-loader',
@@ -43,6 +44,20 @@ module.exports={
                     }
                 ]
             },
+            {
+                test: /\.(css|scss)$/,
+                use: [
+                    'style-loader',
+                    'css-loader'
+                ],
+                exclude: /\.module\.css$/
+            },
+            {
+                test:/\.ttf$/,
+                use:[
+                    'file-loader'
+                ],
+            }
         ]
     },
     plugins:[

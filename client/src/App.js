@@ -1,6 +1,6 @@
 
 import React from 'react';
-
+import './globalCSS.css'
 import {
   BrowserRouter as Router,
   Routes,
@@ -26,11 +26,12 @@ function App() {
       <Routes>
           <Route exact path='signUp' element = { < SignUp /> }/>
           <Route exact path='signIn' element={ <Login/> }/>
-          <Route path='main' element={ < Main /> } >
+          <Route path='/' element={ < Main /> } >
               {/*<Route index element={<Main/>}/>*/}
-              <Route path='news' element={<News/>} />
+              <Route path={'news'} element={<News/>}  />
               <Route path='chats' element={<Chats/>} />
               <Route path='settings' element={<Settings/>}/>
+
               <Route path='*' element={<NoMatch />}/>
           </Route>
       </Routes>

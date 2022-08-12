@@ -1,5 +1,5 @@
 import React from 'react'
-
+import '../../globalCSS.css'
 export const News=()=>{
     return(
         <>

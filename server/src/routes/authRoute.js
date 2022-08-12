@@ -5,7 +5,7 @@ const {check,body}= require('express-validator');
 const db = require('../../database/mySqlModels');
 const authController = require('../controllers/authController');
 const bcrypt = require("bcrypt");
-
+const isAuth = require('../middlewares/middlewares')
 
 //validator
 const checkEmail = body('email', "emailFalse").isEmail();

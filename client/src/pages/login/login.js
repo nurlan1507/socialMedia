@@ -65,7 +65,7 @@ export const Login = () => {
             console.log(user)
             localStorage.setItem('accessToken', result.payload.data.tokens.accessToken);
             dispatch(userLogined({id:user.id,email:user.email, avatar:user.avatar, firstName:user.firstName, secondName: user.secondName}))
-            navigate('/main')
+            navigate('/')
         }
     }
 

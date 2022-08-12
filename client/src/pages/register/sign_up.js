@@ -41,7 +41,7 @@ export const SignUp=()=>{
                 localStorage.setItem("accessToken" , result.data.tokens.accessToken)
                 const user = result.data.user;
                 dispatch(userRegistered({id:user.id,email:user.email, avatar:user.avatar, firstName:user.firstName, secondName: user.secondName}));
-                navigate('/main')
+                navigate('/')
 
             }
         }catch (e){

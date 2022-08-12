@@ -48,12 +48,26 @@
 
 }
 .tabs{
+    padding-top: 35px;
     width: 100%;
     display: flex;
     flex-direction: column;
+
 }
 .tabsItem{
     width: 100%;
     line-height: 20px;
+    padding:15px 0;
+    /*text-align: center;*/
+    font-size: 25px;
+}
+.tabsItem:hover{
+    background-color: #bbbbbb;
+    color:blue;
+    transition: all ease-out 0.3s;
+}
 
+.fontAwesome{
+    width: 20px;
+    height: 20px;
 }

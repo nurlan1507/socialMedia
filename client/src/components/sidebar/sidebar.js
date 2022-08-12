@@ -1,8 +1,10 @@
 import React from 'react';
-import styles from './sidebar.css';
+import styles from './sidebar.module.css';
 import {getUserData} from "../../features/userAuth/userSlice";
 import {useSelector, useDispatch} from "react-redux";
 import {Link} from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faComment, faList, faGear,faArrowRightFromBracket} from "@fortawesome/free-solid-svg-icons";
 
 export const Sidebar = ()=>{
     const dispatch = useDispatch();
@@ -21,18 +23,18 @@ export const Sidebar = ()=>{
                     </div>
                     <div className={styles.tabsContainer}>
                         <ul className={styles.tabs}>
-                            <li className={styles.tabsItem}>
-                                <Link to={`/main/news`}> News</Link>
-                            </li>
-                            <li className={styles.tabsItem}>
-                                <Link to={`/main/chats`}>Chats</Link>
-                            </li>
-                            <li className={styles.tabsItem}>
-                                <Link to={`/main/settings`}>Settings</Link>
-                            </li>
-                            <li className={styles.tabsItem}>
-                                <Link to={`/main/logout`}>Logout</Link>
-                            </li>
+                            <Link to={`/news`}  style={{textDecoration:"none"}}>
+                                <li className={styles.tabsItem}><FontAwesomeIcon className={styles.fontAwesome} icon={faList} />  News</li>
+                            </Link>
+                            <Link to={`/chats`} style={{textDecoration:"none"}}>
+                                <li className={styles.tabsItem}> <FontAwesomeIcon className={styles.fontAwesome} icon={faComment} /> Chats</li>
+                            </Link>
+                            <Link to={`settings`} style={{textDecoration:"none"}}>
+                                <li className={styles.tabsItem}><FontAwesomeIcon className={styles.fontAwesome} icon={faGear} /> Settings</li>
+                            </Link>
+                            <Link to={`/logout`} style={{textDecoration:"none"}}>
+                                <li className={styles.tabsItem}> <FontAwesomeIcon className={styles.fontAwesome} icon={faArrowRightFromBracket} /> Logout</li>
+                            </Link>
                         </ul>
                     </div>
                 </div>
