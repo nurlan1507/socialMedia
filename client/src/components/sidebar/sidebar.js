@@ -1,15 +1,15 @@
-import React from 'react';
+import React, {useEffect,useState} from 'react';
 import styles from './sidebar.module.css';
-import {getUserData} from "../../features/userAuth/userSlice";
-import {useSelector, useDispatch} from "react-redux";
+import {useSelector} from "react-redux";
+import {getUserData} from "../../redux/reducers/userReducer";
 import {Link} from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faComment, faList, faGear,faArrowRightFromBracket} from "@fortawesome/free-solid-svg-icons";
 
+
+
 export const Sidebar = ()=>{
-    const dispatch = useDispatch();
-    const user = useSelector(getUserData);
-    const newUser = {...user};
+    const user = useSelector(getUserData)
     return(
         <>
             <div className={styles.sidebar}>
@@ -32,9 +32,8 @@ export const Sidebar = ()=>{
                             <Link to={`settings`} style={{textDecoration:"none"}}>
                                 <li className={styles.tabsItem}><FontAwesomeIcon className={styles.fontAwesome} icon={faGear} /> Settings</li>
                             </Link>
-                            <Link to={`/logout`} style={{textDecoration:"none"}}>
-                                <li className={styles.tabsItem}> <FontAwesomeIcon className={styles.fontAwesome} icon={faArrowRightFromBracket} /> Logout</li>
-                            </Link>
+                               <li className={styles.tabsItem} onClick={async()=>{
+                                   console.log('asdasds')}} style={{textDecoration:"none"}}> <FontAwesomeIcon className={styles.fontAwesome} icon={faArrowRightFromBracket}/> Logout </li>
                         </ul>
                     </div>
                 </div>

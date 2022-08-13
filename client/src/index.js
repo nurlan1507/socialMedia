@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 //redux
-import store from './redux';
+import store from '../src/redux/redux';
 import { Provider } from 'react-redux'
 //font
 import './assets/fonts/Montserrat-Italic-VariableFont_wght.ttf'

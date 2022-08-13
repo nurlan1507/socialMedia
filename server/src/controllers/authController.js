@@ -44,6 +44,8 @@ class authController{
             return next(e);
         }
     };
+
+
     async login(req,res,next){
         try{
             passport.authenticate('login', async(err,user,info)=>{
@@ -69,7 +71,14 @@ class authController{
         }
     };
 
-
+    async logout(req,res,next){
+        const cookies = req.cookies;
+        console.log(cookies)
+        console.log('asdasdasdasdsds')
+        res.clearCookie('accessToken');
+        res.clearCookie('refreshToken');
+        return res.status(200).json({msg:`user ${req.user.email} logout`});
+    };
 
 
     async auth2(req,res,next){
@@ -78,24 +87,22 @@ class authController{
             const credentials =await authService.getGoogleUserCredentials(tokenId);
             const exUser = await db.users.findOne({where:{email:credentials.email}} );
             if(exUser){
-                console.log(exUser.dataValues)
                 const newTokens =await authService.refreshTokens(exUser.dataValues);
                 res.cookie('accessToken', newTokens.accessToken, {httpOnly:true, maxAge: 30*60*1000});
                 res.cookie('refreshToken', newTokens.refreshToken, {httpOnly:true, maxAge: 30*24*60*60*1000});
                 return res.status(200).json({user:{...exUser}, tokens:{...newTokens}});
-            }else {
+            }
+                console.log('Я НЕ ДОЛЖЕН ВЫПОЛНЯТЬСЯ')
                 const newUser = await db.users.create({
                     firstName: credentials.given_name,
                     secondName: credentials.family_name,
                     email: credentials.email,
                     avatar: credentials.picture,
-                });
-                console.log(newUser);
+                },{raw:true});
                 const newTokens = await authService.refreshTokens(newUser);
                 res.cookie('accessToken', newTokens.accessToken, {httpOnly:true, maxAge: 30*60*1000});
                 res.cookie('refreshToken', newTokens.refreshToken, {httpOnly:true, maxAge: 30*24*60*60*1000});
                 return res.status(200).json({user:{newUser}, tokens:{...newTokens}});
-            }
         }catch (e) {
             return next(e)
         }

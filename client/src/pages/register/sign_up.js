@@ -2,8 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import styles from  './sign_up.modules.css';
-import { fetchSignUp, userRegistered} from "../../features/userAuth/userSlice";
-const footer= require('../../assets/footer.png');
+import {register} from "../../redux/actions/userAction";
 
 
 export const SignUp=()=>{
@@ -24,30 +23,18 @@ export const SignUp=()=>{
 
 
 
+
     const onSignUpClicked =async()=>{
         try{
-            setSignUpRequestStatus('pending');
-            const result = await dispatch(fetchSignUp({email:email,password:password,repeat_password:repeat_password, firstName:firstName,secondName:secondName})).unwrap();
-            if(result.status !== 200){
-                if(result.data.errors)
-                setErrors(result.data.errors)
-                else{
-                    console.log(result.data)
-                    setErrors(result.data)
-                }
+            const result = await dispatch(register({email:email, firstName:firstName,secondName:secondName, password:password, repeat_password:repeat_password}));
+            if(result.status ===200){
+                navigate('/');
+                return;
             }
-            console.log(result.data)
-            if(result.status ===200) {
-                localStorage.setItem("accessToken" , result.data.tokens.accessToken)
-                const user = result.data.user;
-                dispatch(userRegistered({id:user.id,email:user.email, avatar:user.avatar, firstName:user.firstName, secondName: user.secondName}));
-                navigate('/')
-
-            }
-        }catch (e){
-            console.log(e.response);
-        }finally {
-            setSignUpRequestStatus('idle');
+            setErrors(result)
+            return
+        }catch (e) {
+            console.log(e)
         }
     }
 
